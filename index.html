@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="km">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="ប្រព័ន្ធគ្រប់គ្រងពិន្ទុសិស្សថ្នាក់មត្តេយ្យភាសាចិន / Chinese Kindergarten Score Management System">
+  <title>ប្រព័ន្ធគ្រប់គ្រងពិន្ទុសិស្សថ្នាក់មត្តេយ្យភាសាចិន - 华文幼儿园成绩系统</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/school-logo.png">
+
+  <!-- Modern Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+
+<body>
+
+  <!-- Custom Electron Desktop Frameless Titlebar -->
+  <header id="desktop-titlebar" class="desktop-titlebar">
+    <div class="titlebar-brand">
+      <span class="titlebar-icon" id="titlebar-school-icon"><img src="assets/images/school-logo.png" alt="Logo" class="titlebar-logo"></span>
+      <span class="titlebar-title">គ្រប់គ្រងពិន្ទុមត្តេយ្យ 华文幼儿园成绩系统</span>
+      <span class="titlebar-badge">Desktop App</span>
+    </div>
+
+    <div class="titlebar-center">
+      <span class="titlebar-chip" id="titlebar-academic-info">ឆ្នាំសិក្សា 2025 - 2026 | ឆមាសទី ១ (Term 1)</span>
+    </div>
+
+    <div class="titlebar-actions">
+      <!-- Dark/Light Theme Toggle -->
+      <button id="titlebar-theme-toggle" class="btn-theme-toggle" title="ប្តូរពណ៌ (Light/Dark Theme)">🌙</button>
+
+      <!-- Desktop Window Controls -->
+      <div class="win-controls">
+        <button id="win-btn-minimize" class="win-btn" title="បង្រួម / 最小化">&#8212;</button>
+        <button id="win-btn-maximize" class="win-btn" title="ពង្រីក / 最大化">&#9633;</button>
+        <button id="win-btn-close" class="win-btn close" title="បិទ / 关闭">&#10005;</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon" id="sidebar-brand-icon">
+          <img src="assets/images/school-logo.png" alt="Logo" class="sidebar-brand-logo">
+        </div>
+        <div class="brand-info">
+          <div class="brand-title" data-i18n="appTitle">គ្រប់គ្រងពិន្ទុមត្តេយ្យ</div>
+          <div class="brand-subtitle" data-i18n="appSubtitle">华文幼儿园成绩系统</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-item active" data-tab="dashboard">
+          <span class="nav-icon">📊</span>
+          <span data-i18n="navDashboard">ផ្ទាំងគ្រប់គ្រង</span>
+        </a>
+        <a href="#students" class="nav-item" data-tab="students">
+          <span class="nav-icon">👧</span>
+          <span data-i18n="navStudents">បញ្ជីសិស្ស</span>
+        </a>
+        <a href="#scores" class="nav-item" data-tab="scores">
+          <span class="nav-icon">📝</span>
+          <span data-i18n="navScores">បញ្ចូលពិន្ទុ</span>
+        </a>
+        <a href="#attendance" class="nav-item" data-tab="attendance">
+          <span class="nav-icon">📅</span>
+          <span>វត្តមានសិស្ស</span>
+        </a>
+        <a href="#honor-roll" class="nav-item" data-tab="honor-roll">
+          <span class="nav-icon">🎖️</span>
+          <span>តារាងកិត្តិយស</span>
+        </a>
+        <a href="#reports" class="nav-item" data-tab="reports">
+          <span class="nav-icon">📜</span>
+          <span data-i18n="navReports">ព្រឹត្តិបត្រពិន្ទុ</span>
+        </a>
+        <a href="#certificates" class="nav-item" data-tab="certificates">
+          <span class="nav-icon">🏆</span>
+          <span data-i18n="navCertificates">ប័ណ្ណសរសើរ</span>
+        </a>
+        <a href="#settings" class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙️</span>
+          <span data-i18n="navSettings">ការកំណត់ និងបម្រុងទុក</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="school-badge-card">
+          <div class="school-badge-icon" id="sidebar-school-logo">
+            <img src="assets/images/school-logo.png" alt="School Logo" class="sidebar-school-logo-img">
+          </div>
+          <div class="school-badge-text">
+            <strong id="sidebar-school-km">សាលារៀន ខ្មែរ-ចិន ភៃហួរ</strong>
+            <span id="sidebar-school-cn"
+              style="font-family: var(--font-chinese); font-size: 10px; color: var(--text-muted);">磅湛省公立培华学校</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Top Application Bar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <h1 class="page-title" id="topbar-page-title" data-i18n="navDashboard">ផ្ទាំងគ្រប់គ្រង</h1>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Quick Print Button -->
+          <button class="btn btn-secondary btn-sm" id="topbar-print-btn" title="បោះពុម្ព / 打印 (Ctrl+P)">
+            <span>🖨️</span> <span data-i18n="print">បោះពុម្ព</span>
+          </button>
+
+          <!-- Language Selector Switcher -->
+          <div class="lang-switcher" aria-label="Language Selector">
+            <button class="lang-btn active" data-lang="km">🇰🇭 ខ្មែរ</button>
+            <button class="lang-btn" data-lang="zh">🇨🇳 中文</button>
+            <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dynamic View Container -->
+      <div class="app-viewport">
+
+        <!-- VIEW 1: DASHBOARD -->
+        <section id="view-dashboard" class="view-container active">
+          <!-- Quick Stat Cards -->
+          <div class="stats-grid">
+            <div class="stat-card indigo">
+              <div class="stat-info">
+                <span class="stat-label" data-i18n="totalStudents">សិស្សសរុប</span>
+                <span class="stat-value" id="stat-total-students">10</span>
+                <span class="stat-subtext">幼大/幼中/幼小班</span>
+              </div>
+              <div class="stat-icon indigo">👶</div>
+            </div>
+
+            <div class="stat-card emerald">
+              <div class="stat-info">
+                <span class="stat-label" data-i18n="classAverage">មធ្យមភាគរួម</span>
+                <span class="stat-value" id="stat-average-score">92.4</span>
+                <span class="stat-subtext">ពិន្ទុមធ្យមសិស្សទូទាំងសាលា</span>
+              </div>
+              <div class="stat-icon emerald">📈</div>
+            </div>
+
+            <div class="stat-card rose">
+              <div class="stat-info">
+                <span class="stat-label"><span data-i18n="femaleStudents">សិស្សស្រី</span> / <span
+                    data-i18n="maleStudents">ប្រុស</span></span>
+                <span class="stat-value">
+                  <span id="stat-female-students">5</span> / <span id="stat-male-students">5</span>
+                </span>
+                <span class="stat-subtext">សមាមាត្រយេនឌ័រ</span>
+              </div>
+              <div class="stat-icon rose">👧</div>
+            </div>
+
+            <div class="stat-card amber">
+              <div class="stat-info">
+                <span class="stat-label" data-i18n="totalClasses">ថ្នាក់រៀន</span>
+                <span class="stat-value" id="stat-total-classes">3</span>
+                <span class="stat-subtext">K1, K2, K3</span>
+              </div>
+              <div class="stat-icon amber">🏫</div>
+            </div>
+
+            <div class="stat-card cyan">
+              <div class="stat-info">
+                <span class="stat-label">អត្រាវត្តមានសរុប</span>
+                <span class="stat-value" id="stat-attendance-rate">98%</span>
+                <span class="stat-subtext">ស្ថិតិវត្តមានទូទាំងសាលា</span>
+              </div>
+              <div class="stat-icon cyan">📅</div>
+            </div>
+
+            <div class="stat-card purple">
+              <div class="stat-info">
+                <span class="stat-label">មុខវិជ្ជាសកម្ម</span>
+                <span class="stat-value" id="stat-total-subjects">6</span>
+                <span class="stat-subtext">កម្មវិធីសិក្សាមត្តេយ្យ</span>
+              </div>
+              <div class="stat-icon purple">📚</div>
+            </div>
+          </div>
+
+          <!-- Dashboard Grid: Top Achievers & Quick Actions -->
+          <div class="dashboard-grid">
+            <!-- Top Honor Roll Card -->
+            <div class="content-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <span>🏆</span> <span data-i18n="topAchievers">តារាងកិត្តិយសសិស្សឆ្នើម</span>
+                </div>
+                <span class="badge badge-grade-excellent">Top 5 优等生</span>
+              </div>
+              <div class="honor-list" id="dashboard-honor-list">
+                <!-- Dynamically injected top students -->
+              </div>
+            </div>
+
+            <!-- Quick Action Cards -->
+            <div class="content-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <span>⚡</span> <span data-i18n="quickActions">សកម្មភាពរហ័ស</span>
+                </div>
+              </div>
+              <div class="quick-actions-grid">
+                <div class="quick-action-btn" data-quick-tab="students" data-quick-action="add-student">
+                  <div class="quick-action-icon">➕</div>
+                  <div class="quick-action-title" data-i18n="quickAddStudent">ចុះឈ្មោះសិស្សថ្មី</div>
+                  <div class="quick-action-desc">ចុះឈ្មោះ និងរូបតំណាង</div>
+                </div>
+
+                <div class="quick-action-btn" data-quick-tab="scores">
+                  <div class="quick-action-icon">✍️</div>
+                  <div class="quick-action-title" data-i18n="quickEnterScores">បញ្ចូលពិន្ទុថ្នាក់</div>
+                  <div class="quick-action-desc">បញ្ចូលពិន្ទុ និងមតិយោបល់</div>
+                </div>
+
+                <div class="quick-action-btn" data-quick-tab="reports">
+                  <div class="quick-action-icon">🖨️</div>
+                  <div class="quick-action-title" data-i18n="quickPrintReports">បោះពុម្ពព្រឹត្តិបត្រ</div>
+                  <div class="quick-action-desc">ទម្រង់ A4 ទ្វេភាសា</div>
+                </div>
+
+                <div class="quick-action-btn" data-quick-tab="settings">
+                  <div class="quick-action-icon">💾</div>
+                  <div class="quick-action-title" data-i18n="quickBackup">ទាញយកឯកសារបម្រុងទុក</div>
+                  <div class="quick-action-desc">សុវត្ថិភាពទិន្នន័យ JSON</div>
+                </div>
+              </div>
+
+              <!-- Kindergarten Tips Card -->
+              <div
+                style="margin-top: 20px; padding: 14px 16px; background: #EEF2FF; border-radius: var(--radius-md); border-left: 4px solid var(--primary);">
+                <div style="font-weight: 700; font-size: 13px; color: var(--primary);">💡 គន្លឹះវាយតម្លៃមត្តេយ្យ (幼教小贴士)
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.5;">
+                  ការវាយតម្លៃសិស្សមត្តេយ្យភាសាចិនផ្តោតលើការលើកទឹកចិត្ត ការបញ្ចេញសំឡេងច្បាស់លាស់ និងការអភិវឌ្ឍជំនាញសង្គម។
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Analytics & Charts Section -->
+          <div class="analytics-grid" style="margin-top: 24px;">
+            <div class="analytics-card">
+              <div class="analytics-card-title">
+                <span>📊 ការបែងចែកនិទ្ទេស (成绩分布 - Grade Breakdown)</span>
+                <span class="badge badge-k2">ឆមាសសកម្ម</span>
+              </div>
+              <div id="analytics-grade-chart"></div>
+            </div>
+
+            <div class="analytics-card">
+              <div class="analytics-card-title">
+                <span>📈 ពិន្ទុមធ្យមតាមមុខវិជ្ជា (各科平均成绩)</span>
+                <span class="badge badge-grade-excellent">មាត្រដ្ឋាន ១០ ពិន្ទុ</span>
+              </div>
+              <div id="analytics-subject-chart"></div>
+            </div>
+          </div>
+
+          <!-- Class Performance Comparison -->
+          <div class="content-card" style="margin-top: 20px;">
+            <div class="card-header">
+              <div class="card-title">
+                <span>🏫 ការប្រៀបធៀបពិន្ទុតាមថ្នាក់រៀន (班级表现对比)</span>
+              </div>
+            </div>
+            <div id="analytics-class-chart"></div>
+          </div>
+        </section>
+
+        <!-- VIEW 2: STUDENTS MANAGEMENT -->
+        <section id="view-students" class="view-container">
+          <div class="filter-bar">
+            <div class="filter-left">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="student-search-input" placeholder="ស្វែងរកតាមឈ្មោះខ្មែរ ចិន ឬអត្តលេខ..."
+                  data-i18n-placeholder="searchPlaceholder">
+              </div>
+
+              <!-- Class Filter Pills -->
+              <div class="class-filter-pills" id="student-class-pills">
+                <button class="class-pill-btn active" data-class="all">ទាំងអស់ (全部)</button>
+                <button class="class-pill-btn" data-class="K3">幼大班 (K3)</button>
+                <button class="class-pill-btn" data-class="K2">幼中班 (K2)</button>
+                <button class="class-pill-btn" data-class="K1">幼小班 (K1)</button>
+              </div>
+
+              <select class="select-control" id="student-class-filter" style="display: none;">
+                <option value="all" data-i18n="allClasses">គ្រប់ថ្នាក់ទាំងអស់</option>
+                <option value="K3">មត្តេយ្យកម្រិតខ្ពស់ (幼大班 - K3)</option>
+                <option value="K2">មត្តេយ្យកម្រិតទាប (幼中班 - K2)</option>
+                <option value="K1">ថ្នាក់កុមារដ្ឋាន (幼小班 - K1)</option>
+              </select>
+
+              <select class="select-control" id="student-gender-filter">
+                <option value="all" data-i18n="filterGender">គ្រប់ភេទ</option>
+                <option value="male" data-i18n="male">ប្រុស (男)</option>
+                <option value="female" data-i18n="female">ស្រី (女)</option>
+              </select>
+
+              <span class="badge badge-k2" id="students-count-badge">10 នាក់</span>
+            </div>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" id="btn-print-class-roster" title="បោះពុម្ពបញ្ជីឈ្មោះសិស្សក្នុងថ្នាក់ (A4 Portrait Class Roster / 班级花名册)">
+                <span>🖨️</span> <span>បញ្ជីឈ្មោះសិស្ស A4</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-print-student-cards" title="បោះពុម្ពកាតសិស្ស A4 (8 Badges Sheet / 打印学生证)">
+                <span>🪪</span> <span>កាតសិស្ស A4</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-download-template" title="ទាញយកទម្រង់គំរូ Excel / CSV">
+                <span>📄</span> <span>ទម្រង់គំរូ CSV</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-import-csv" title="នាំចូលសិស្សពី Excel / CSV">
+                <span>📥</span> <span>នាំចូល CSV</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-open-trash" title="ធុងសំរាម (Trash Bin)">
+                <span>🗑️</span> <span>ធុងសំរាម</span> <span class="badge badge-needs" id="trash-count-badge"
+                  style="display: none;">0</span>
+              </button>
+              <button class="btn btn-primary" id="btn-add-student">
+                <span>➕</span> <span data-i18n="addStudent">ចុះឈ្មោះសិស្សថ្មី</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 90px;" data-i18n="studentId">អត្តលេខ</th>
+                  <th data-i18n="khmerName">ឈ្មោះសិស្ស (ខ្មែរ / ចិន)</th>
+                  <th style="width: 80px;" data-i18n="gender">ភេទ</th>
+                  <th style="width: 140px;" data-i18n="classGrade">ថ្នាក់រៀន</th>
+                  <th style="width: 110px;" data-i18n="dob">ថ្ងៃកំណើត</th>
+                  <th data-i18n="guardianName">អាណាព្យាបាល / ទូរស័ព្ទ</th>
+                  <th style="width: 130px;" data-i18n="actions">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody id="students-table-body">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW 3: SCORE ENTRY & EVALUATION -->
+        <section id="view-scores" class="view-container">
+          <div class="filter-bar">
+            <div class="filter-left">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-size: 13px; font-weight: 600;" data-i18n="selectClass">ជ្រើសរើសថ្នាក់:</label>
+                <select class="select-control" id="score-class-select">
+                  <option value="K1" selected>ថ្នាក់កុមារដ្ឋាន (幼小班 - K1)</option>
+                  <option value="K2">មត្តេយ្យកម្រិតទាប (幼中班 - K2)</option>
+                  <option value="K3">មត្តេយ្យកម្រិតខ្ពស់ (幼大班 - K3)</option>
+                </select>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-size: 13px; font-weight: 600;" data-i18n="selectTerm">ឆមាស / ខែ:</label>
+                <select class="select-control" id="score-term-select">
+                  <option value="term1">ឆមាសទី១ (Semester 1)</option>
+                  <option value="term2">ឆមាសទី២ (Semester 2)</option>
+                  <option value="month1">ខែតុលា (Month 1)</option>
+                  <option value="month2">ខែវិច្ឆិកា (Month 2)</option>
+                  <option value="month3">ខែធ្នូ (Month 3)</option>
+                  <option value="finalExam">ប្រឡងប្រចាំឆ្នាំ (Annual)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" id="btn-manage-subjects" title="បន្ថែម ឬកែសម្រួលមុខវិជ្ជា / 管理科目体系">
+                <span>⚙️</span> <span>មុខវិជ្ជា (科目体系)</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-batch-fill-scores" title="កំណត់ពិន្ទុស្មើគ្នាទាំងអស់ / 快速批量填充">
+                <span>⚡</span> <span>បំពេញស្មើគ្នា</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-download-score-template" title="ទាញយកទម្រង់គំរូពិន្ទុ CSV / 下载成绩模板">
+                <span>📄</span> <span>ទម្រង់ពិន្ទុ CSV</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-import-scores-csv" title="នាំចូលពិន្ទុពី CSV / 导入成绩">
+                <span>📥</span> <span>នាំចូល CSV</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-export-scores-csv">
+                <span>📤</span> <span data-i18n="exportExcel">ទាញយក Excel / CSV</span>
+              </button>
+              <button class="btn btn-success btn-sm" id="btn-save-scores">
+                <span>💾</span> <span data-i18n="saveScores">រក្សាទុកពិន្ទុ</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Score Analytics & Smart Generator Banner -->
+          <div class="score-analytics-banner" id="score-analytics-banner" style="margin-bottom: 16px; padding: 14px 18px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 16px;">📊</span>
+                <strong style="font-size: 13.5px; color: var(--text-main);">ស្ថិតិចែកចាយនិទ្ទេសក្នុងថ្នាក់ (成绩分布与分析)</strong>
+                <span class="badge badge-k2" id="score-class-avg-badge">មធ្យមរួមថ្នាក់: 0.0</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="btn-smart-comments" style="background: var(--primary-50); color: var(--primary); border-color: var(--primary-light);">
+                <span>🪄</span> <span>បង្កើតមតិស្វ័យប្រវត្តិតាមពិន្ទុ (智能生成评语)</span>
+              </button>
+            </div>
+
+            <!-- Grade Pills -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                <span style="font-size: 12.5px; font-weight: 700; color: #059669;">និទ្ទេស A (优秀)</span>
+                <span style="font-size: 14px; font-weight: 800; color: #059669;" id="score-stat-count-a">0 (0%)</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+                <span style="font-size: 12.5px; font-weight: 700; color: #2563eb;">និទ្ទេស B (良好)</span>
+                <span style="font-size: 14px; font-weight: 800; color: #2563eb;" id="score-stat-count-b">0 (0%)</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);">
+                <span style="font-size: 12.5px; font-weight: 700; color: #d97706;">និទ្ទេស C (中等)</span>
+                <span style="font-size: 14px; font-weight: 800; color: #d97706;" id="score-stat-count-c">0 (0%)</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);">
+                <span style="font-size: 12.5px; font-weight: 700; color: #dc2626;">និទ្ទេស D (需努力)</span>
+                <span style="font-size: 14px; font-weight: 800; color: #dc2626;" id="score-stat-count-d">0 (0%)</span>
+              </div>
+            </div>
+
+            <!-- Subject Averages Strip -->
+            <div id="score-subject-averages-strip" style="display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); align-items: center; padding-top: 6px; border-top: 1px dashed var(--border-light);">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Score Table Matrix -->
+          <div class="table-container score-matrix-table">
+            <table class="data-table">
+              <thead id="score-matrix-thead">
+                <tr>
+                  <th style="width: 40px; text-align: center;">ល.រ</th>
+                  <th style="min-width: 140px;">ឈ្មោះសិស្ស</th>
+                  <th style="text-align: center; width: 85px;" title="华文">ភាសាចិន<br><span
+                      style="font-size: 11px; font-family: var(--font-chinese); font-weight: bold; color: var(--primary);">华文 (100)</span>
+                  </th>
+                  <th style="text-align: center; width: 85px;" title="拼音">ភីនអុីន<br><span
+                      style="font-size: 11px; font-family: var(--font-chinese); font-weight: bold; color: var(--primary);">拼音 (100)</span>
+                  </th>
+                  <th style="text-align: center; width: 85px;" title="数学">គណិតវិទ្យា<br><span
+                      style="font-size: 11px; font-family: var(--font-chinese); font-weight: bold; color: var(--primary);">数学 (100)</span>
+                  </th>
+                  <th style="text-align: center; width: 85px;" title="汉乐">ពាក្យចិនចំរុះ<br><span
+                      style="font-size: 11px; font-family: var(--font-chinese); font-weight: bold; color: var(--primary);">汉乐 (100)</span>
+                  </th>
+                  <th style="text-align: center; width: 85px;" title="笔顺">គំនូសអក្សរ<br><span
+                      style="font-size: 11px; font-family: var(--font-chinese); font-weight: bold; color: var(--primary);">笔顺 (100)</span>
+                  </th>
+                  <th style="text-align: center; width: 85px;" title="唱游">ចម្រៀង-កាយវិការ<br><span
+                      style="font-size: 11px; font-family: var(--font-chinese); font-weight: bold; color: var(--primary);">唱游 (100)</span>
+                  </th>
+                  <th style="text-align: center; width: 70px;" data-i18n="totalScore">សរុប (600)</th>
+                  <th style="text-align: center; width: 75px;" data-i18n="averageScore">មធ្យម (100)</th>
+                  <th style="text-align: center; width: 110px;" data-i18n="gradeMention">និទ្ទេស</th>
+                  <th style="text-align: center; width: 65px;" data-i18n="rank">ចំណាត់ថ្នាក់</th>
+                  <th data-i18n="teacherComment">មតិយោបល់គ្រូបន្ទុកថ្នាក់</th>
+                </tr>
+              </thead>
+              <tbody id="score-matrix-body">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW: ATTENDANCE (វត្តមានសិស្ស) -->
+        <section id="view-attendance" class="view-container">
+          <!-- Attendance Controls Bar -->
+          <div class="filter-bar content-card" style="margin-bottom: 20px;">
+            <div class="filter-group">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>ថ្នាក់រៀន (班级)</label>
+                <select class="select-control" id="attendance-class-select">
+                  <option value="K1" selected>ថ្នាក់កុមារដ្ឋាន (幼小班 - K1)</option>
+                  <option value="K2">មត្តេយ្យកម្រិតទាប (幼中班 - K2)</option>
+                  <option value="K3">មត្តេយ្យកម្រិតខ្ពស់ (幼大班 - K3)</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>ឆមាស (学期)</label>
+                <select class="select-control" id="attendance-term-select">
+                  <option value="term1" selected>ឆមាសទី១ (Semester 1)</option>
+                  <option value="term2">ឆមាសទី២ (Semester 2)</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>ការកំណត់ខែ (月份)</label>
+                <select class="select-control" id="attendance-month-select">
+                  <option value="all" selected>សរុបឆមាសទាំងមូល (整个学期)</option>
+                  <option value="month1">ខែទី ១ (Month 1)</option>
+                  <option value="month2">ខែទី ២ (Month 2)</option>
+                  <option value="month3">ខែទី ៣ (Month 3)</option>
+                  <option value="month4">ខែទី ៤ (Month 4)</option>
+                  <option value="month5">ខែទី ៥ (Month 5)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <div class="class-filter-pills" id="attendance-view-pills" style="margin-right: 6px;">
+                <button type="button" class="class-pill-btn active" id="btn-att-view-summary">📊 សង្ខេបប្រចាំខែ (月度总览)</button>
+                <button type="button" class="class-pill-btn" id="btn-att-view-daily">📅 ប្រតិទិនប្រចាំថ្ងៃ (每日考勤)</button>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="btn-mark-all-present" title="សម្គាល់វត្តមានពេញទាំងអស់ / 一键全勤">
+                <span>✨</span> <span>វត្តមានពេញទាំងអស់</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-print-attendance" title="បោះពុម្ពតារាងស្រង់វត្តមានប្រចាំខែ (A4 Landscape / 打印考勤表)">
+                <span>🖨️</span> <span>បោះពុម្ពវត្តមាន A4</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-export-attendance-csv" title="ទាញយកស្ថិតិវត្តមានជា Excel / CSV / 导出考勤">
+                <span>📥</span> <span>ទាញយក CSV</span>
+              </button>
+              <button class="btn btn-success btn-sm" id="btn-save-attendance">
+                <span>💾</span> <span>រក្សាទុកវត្តមាន (Save)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Summary Badges Bar -->
+          <div class="attendance-stats-strip" id="att-summary-stats-strip" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 18px;">
+            <div class="att-stat-card card-present">
+              <div class="att-stat-title">វត្តមានពេញសរុប (出勤)</div>
+              <div class="att-stat-val" id="stat-att-present">0</div>
+            </div>
+            <div class="att-stat-card card-excused">
+              <div class="att-stat-title">មានច្បាប់សរុប (请假 - P)</div>
+              <div class="att-stat-val" id="stat-att-excused">0</div>
+            </div>
+            <div class="att-stat-card card-unexcused">
+              <div class="att-stat-title">ឥតច្បាប់សរុប (旷课 - A)</div>
+              <div class="att-stat-val" id="stat-att-unexcused">0</div>
+            </div>
+            <div class="att-stat-card card-late">
+              <div class="att-stat-title">យឺតសរុប (迟到 - L)</div>
+              <div class="att-stat-val" id="stat-att-late">0</div>
+            </div>
+          </div>
+
+          <!-- Monthly Attendance Table Container -->
+          <div class="table-container" id="att-summary-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 45px; text-align: center;">ល.រ</th>
+                  <th style="min-width: 170px;">ឈ្មោះសិស្ស (姓名)</th>
+                  <th style="text-align: center; width: 110px;">វត្តមានពេញ<br><span style="font-size: 11px; font-weight: normal; color: #10B981;">出勤 (ថ្ងៃ)</span></th>
+                  <th style="text-align: center; width: 100px;">មានច្បាប់<br><span style="font-size: 11px; font-weight: normal; color: #F59E0B;">请假 (P)</span></th>
+                  <th style="text-align: center; width: 100px;">ឥតច្បាប់<br><span style="font-size: 11px; font-weight: normal; color: #EF4444;">旷课 (A)</span></th>
+                  <th style="text-align: center; width: 90px;">យឺត<br><span style="font-size: 11px; font-weight: normal; color: #6366F1;">迟到 (L)</span></th>
+                  <th style="text-align: center; width: 100px;">ថ្ងៃរៀនសរុប<br><span style="font-size: 11px; font-weight: normal;">总学日</span></th>
+                  <th style="text-align: center; width: 100px;">អត្រាវត្តមាន<br><span style="font-size: 11px; font-weight: normal;">出勤率</span></th>
+                  <th style="text-align: center; width: 85px;">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody id="attendance-table-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Day-by-Day Attendance Table Container -->
+          <div class="table-container" id="att-daily-table-container" style="display: none; overflow-x: auto;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+              <div style="font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 12px;">
+                <span>ចុចក្រឡាដើម្បីប្តូរ៖</span>
+                <span><strong style="color: #10B981;">P</strong> (出勤)</span>
+                <span><strong style="color: #F59E0B;">E</strong> (请假)</span>
+                <span><strong style="color: #EF4444;">U</strong> (旷课)</span>
+                <span><strong style="color: #6366F1;">L</strong> (迟到)</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-daily-mark-today-present">
+                  <span>✨</span> <span>វត្តមានទាំងអស់ (P)</span>
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-daily-save">
+                  <span>💾</span> <span>រក្សាទុកវត្តមានប្រចាំថ្ងៃ</span>
+                </button>
+              </div>
+            </div>
+            <table class="data-table att-daily-table" id="table-attendance-daily" style="font-size: 11.5px; white-space: nowrap;">
+              <!-- Dynamically populated from attendance.js -->
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW 4: REPORT CARDS -->
+        <section id="view-reports" class="view-container">
+          <div class="reports-layout">
+            <!-- Left Controls & Student List -->
+            <div class="report-controls-panel">
+              <div
+                style="font-weight: 700; font-size: 15px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                <span>📋</span> <span data-i18n="reportCardTitle">ព្រឹត្តិបត្រពិន្ទុ</span>
+              </div>
+
+              <div class="form-group">
+                <label data-i18n="selectClass">ថ្នាក់រៀន</label>
+                <select class="select-control" id="report-class-filter">
+                  <option value="all" data-i18n="allClasses">គ្រប់ថ្នាក់ទាំងអស់</option>
+                  <option value="K1" selected>ថ្នាក់កុមារដ្ឋាន (幼小班 - K1)</option>
+                  <option value="K2">មត្តេយ្យកម្រិតទាប (幼中班 - K2)</option>
+                  <option value="K3">មត្តេយ្យកម្រិតខ្ពស់ (幼大班 - K3)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label data-i18n="selectTerm">ឆមាស / ខែ</label>
+                <select class="select-control" id="report-term-filter">
+                  <option value="term1">ឆមាសទី១ (Semester 1)</option>
+                  <option value="term2">ឆមាសទី២ (Semester 2)</option>
+                  <option value="month1">ខែតុលា (Month 1)</option>
+                  <option value="finalExam">ប្រឡងប្រចាំឆ្នាំ (Annual)</option>
+                  <option value="annualRecord">សៀវភៅតាមដានប្រចាំឆ្នាំ (学年综合成长档案)</option>
+                </select>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+                <button class="btn btn-primary" id="btn-print-report">
+                  <span>🖨️</span> <span data-i18n="printReport">បោះពុម្ពព្រឹត្តិបត្រនេះ</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-export-pdf-report">
+                  <span>📥</span> <span>រក្សាទុកជា PDF (Save PDF)</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-print-all-reports">
+                  <span>📑</span> <span data-i18n="printAllReports">បោះពុម្ពទាំងថ្នាក់ (Batch)</span>
+                </button>
+              </div>
+
+              <div class="form-group" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-light);">
+                <label style="font-size: 12px; font-weight: 700;">✍️ មតិយោបល់គ្រូ (教师成长评语)</label>
+                <select class="select-control" id="rc-quick-comment-select" style="font-size: 12px; margin-top: 4px;">
+                  <option value="">-- ជ្រើសរើសមតិយោបល់គំរូរហ័ស --</option>
+                  <option value="model">🌟 សិស្សពូកែ និងវិន័យថ្លៃថ្នូរ (成绩优异·品德端正)</option>
+                  <option value="chinese">🀄 ឆ្នើមភាសាចិន (华语听说突出)</option>
+                  <option value="smart">💡 ឆ្លាតវៃ រហ័សរហួន (思维敏捷·活泼自信)</option>
+                  <option value="creative">🎨 គំនិតច្នៃប្រឌិត និងសិល្បៈ (艺术创意·巧手小画家)</option>
+                  <option value="improving">🌱 សុភាពរាបសារ និងរីកចម្រើន (积极努力·稳步进步)</option>
+                </select>
+                <textarea id="rc-teacher-comment-input" class="input-control" rows="3" style="width: 100%; margin-top: 6px; font-size: 12px; padding: 6px 8px; resize: vertical;" placeholder="វាយមតិយោបល់គ្រូបន្ថែមនៅទីនេះ..."></textarea>
+                <button class="btn btn-secondary btn-sm" id="btn-save-comment" style="width: 100%; margin-top: 6px;">
+                  <span>💾</span> <span>រក្សាទុកមតិយោបល់សិស្សនេះ</span>
+                </button>
+              </div>
+
+              <div class="form-group" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-light);">
+                <label style="font-size: 12px; font-weight: 700;">🌟 កែសម្រួលផ្កាយ ៥ វិស័យ (五大领域定级)</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; font-size: 11px;">
+                  <div>
+                    <span>🏃‍♂️ សុខភាព:</span>
+                    <select class="select-control" id="rc-domain-health-select" style="font-size: 11px; padding: 2px 4px;">
+                      <option value="5">★★★★★ (5)</option>
+                      <option value="4">★★★★☆ (4)</option>
+                      <option value="3">★★★☆☆ (3)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <span>🗣️ ភាសា:</span>
+                    <select class="select-control" id="rc-domain-language-select" style="font-size: 11px; padding: 2px 4px;">
+                      <option value="5">★★★★★ (5)</option>
+                      <option value="4">★★★★☆ (4)</option>
+                      <option value="3">★★★☆☆ (3)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <span>🤝 សង្គម:</span>
+                    <select class="select-control" id="rc-domain-social-select" style="font-size: 11px; padding: 2px 4px;">
+                      <option value="5">★★★★★ (5)</option>
+                      <option value="4">★★★★☆ (4)</option>
+                      <option value="3">★★★☆☆ (3)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <span>🔬 វិទ្យាសាស្ត្រ:</span>
+                    <select class="select-control" id="rc-domain-science-select" style="font-size: 11px; padding: 2px 4px;">
+                      <option value="5">★★★★★ (5)</option>
+                      <option value="4">★★★★☆ (4)</option>
+                      <option value="3">★★★☆☆ (3)</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="margin-top: 6px; font-size: 11px;">
+                  <span>🎨 សិល្បៈ និងតន្ត្រី:</span>
+                  <select class="select-control" id="rc-domain-art-select" style="font-size: 11px; padding: 2px 4px; width: 100%;">
+                    <option value="5">★★★★★ (5)</option>
+                    <option value="4">★★★★☆ (4)</option>
+                    <option value="3">★★★☆☆ (3)</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr style="border: none; border-top: 1px solid var(--border-light); margin: 6px 0;">
+
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);" data-i18n="selectStudentToView">
+                ជ្រើសរើសសិស្សដើម្បីមើល៖
+              </div>
+
+              <div class="student-selector-list" id="report-student-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Right Preview Area -->
+            <div class="report-preview-wrapper">
+              <div id="report-card-preview-area">
+                <!-- Rendered A4 Page -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: HONOR ROLL (តារាងកិត្តិយសសិស្សឆ្នើម) -->
+        <section id="view-honor-roll" class="view-container">
+          <!-- Honor Roll Controls Bar -->
+          <div class="filter-bar content-card" style="margin-bottom: 20px;">
+            <div class="filter-group">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>ថ្នាក់រៀន (班级)</label>
+                <select class="select-control" id="honor-class-select">
+                  <option value="K1" selected>ថ្នាក់កុមារដ្ឋាន (幼小班 - K1)</option>
+                  <option value="K2">មត្តេយ្យកម្រិតទាប (幼中班 - K2)</option>
+                  <option value="K3">មត្តេយ្យកម្រិតខ្ពស់ (幼大班 - K3)</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>ឆមាស (学期)</label>
+                <select class="select-control" id="honor-term-select">
+                  <option value="term1" selected>ឆមាសទី១ (Semester 1)</option>
+                  <option value="term2">ឆមាសទី២ (Semester 2)</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>ចំនួនសិស្សឆ្នើមបង្ហាញ</label>
+                <select class="select-control" id="honor-limit-select">
+                  <option value="3">កំពូលសិស្សឆ្នើម Top 3 (状元/榜眼/探花)</option>
+                  <option value="5" selected>កំពូលសិស្សឆ្នើម Top 5</option>
+                  <option value="10">កំពូលសិស្សឆ្នើម Top 10</option>
+                  <option value="99">សិស្សទាំងអស់ក្នុងថ្នាក់ (全班总榜)</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>ស្ទីលរចនាប័ទ្ម (榜单风格)</label>
+                <select class="select-control" id="honor-theme-select">
+                  <option value="royal" selected>👑 រាជវាំងមាស (皇家金红)</option>
+                  <option value="blue">🎓 អន្តរជាតិខៀវ (现代深蓝)</option>
+                  <option value="blossom">🌸 ផ្កាឈូរី (国风雅韵)</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>ប្រភេទពានរង្វាន់ (榜单类别)</label>
+                <select class="select-control" id="honor-category-select">
+                  <option value="overall" selected>🏆 កំពូលពិន្ទុសរុប (总评前茅)</option>
+                  <option value="chinese">🀄 ឆ្នើមភាសាចិន (华语之星)</option>
+                  <option value="math">🔢 ឆ្នើមគណិតវិទ្យា (算术之星)</option>
+                  <option value="art">🎨 ឆ្នើមសិល្បៈ (艺术之星)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <button class="btn btn-primary" id="btn-print-honor">
+                <span>🖨️</span> <span>បោះពុម្ពតារាងកិត្តិយស (Print)</span>
+              </button>
+              <button class="btn btn-secondary" id="btn-export-pdf-honor">
+                <span>📥</span> <span>រក្សាទុកជា PDF (Save PDF)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Printable Preview Area -->
+          <div class="report-preview-wrapper honor-roll-preview-wrapper" style="padding: 24px; overflow-x: auto;">
+            <div id="honor-roll-sheet">
+              <!-- Rendered Honor Roll Sheet -->
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 5: CERTIFICATES OF MERIT -->
+        <section id="view-certificates" class="view-container">
+          <div class="reports-layout">
+            <div class="report-controls-panel">
+              <div
+                style="font-weight: 700; font-size: 15px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                <span>🏆</span> <span data-i18n="navCertificates">ប័ណ្ណសរសើរ</span>
+              </div>
+
+              <div class="form-group">
+                <label>ជ្រើសរើសសិស្សទទួលប័ណ្ណសរសើរ</label>
+                <select class="select-control" id="cert-student-select">
+                  <!-- Dynamically populated with students & ranks -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>ស្ទីលរចនាប័ទ្មប័ណ្ណសរសើរ (证书款式)</label>
+                <select class="select-control" id="cert-style-select">
+                  <option value="imperial" selected>👑 រាជវាំងមាសក្រហម (皇家金红古典)</option>
+                  <option value="kindergarten">🎈 មត្តេយ្យគួរឱ្យស្រឡាញ់ (萌趣童心乐园)</option>
+                  <option value="prestige">🎓 អន្តរជាតិប្រណិត (现代深蓝学术)</option>
+                  <option value="floral">🌸 ផ្កាឈូរីនិទាឃរដូវ (国风水墨雅韵)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>ប្រភេទពានរង្វាន់កិត្តិយស (奖项类别)</label>
+                <select class="select-control" id="cert-award-select">
+                  <option value="auto" selected>⚡ ស្វ័យប្រវត្តិតាមចំណាត់ថ្នាក់ (自动匹配)</option>
+                  <option value="top1">🥇 សិស្សឆ្នើមលេខ១ (第一名 状元)</option>
+                  <option value="top2">🥈 សិស្សឆ្នើមលេខ២ (第二名 榜眼)</option>
+                  <option value="top3">🥉 សិស្សឆ្នើមលេខ៣ (第三名 探花)</option>
+                  <option value="model">🌟 សិស្សគំរូ និងវិន័យល្អ (三好学生 模范生)</option>
+                  <option value="chinese">🀄 សិស្សឆ្នើមភាសាចិន (华语进步之星)</option>
+                  <option value="math">🔢 សិស្សឆ្នើមគណិតវិទ្យា (算术智慧之星)</option>
+                  <option value="art">🎨 សិស្សឆ្នើមសិល្បៈ និងគំនូរ (艺术创意之星)</option>
+                  <option value="music">🎵 សិស្សឆ្នើមចម្រៀង និងតន្ត្រី (歌唱律动之星)</option>
+                  <option value="attendance">🌟 សិស្សវត្តមានពេញ ១០០% (全勤好少年)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px;">
+                  <input type="checkbox" id="cert-include-photo" checked style="accent-color: var(--primary); width: 16px; height: 16px;">
+                  <span>បង្ហាញរូបថតសិស្សលើប័ណ្ណសរសើរ (附学生照片)</span>
+                </label>
+              </div>
+
+              <div class="form-group" style="padding-top: 6px; border-top: 1px solid var(--border-light);">
+                <label style="font-size: 12px; font-weight: 700;">✍️ កែសម្រួលខ្លឹមសារផ្ទាល់ (自定义内容)</label>
+                <input type="text" id="cert-custom-title-km" class="input-control" style="font-size: 11px; margin-bottom: 4px;" placeholder="ចំណងជើងខ្មែរ (ឧ. សិស្សឆ្នើមលេខ ១)">
+                <input type="text" id="cert-custom-title-cn" class="input-control" style="font-size: 11px; margin-bottom: 4px;" placeholder="ចំណងជើងចិន (如: 第一名 · 状元之星)">
+                <textarea id="cert-custom-desc-km" class="input-control" rows="2" style="font-size: 11px; margin-bottom: 4px; resize: vertical;" placeholder="អត្ថបទកោតសរសើរជាភាសាខ្មែរ..."></textarea>
+                <textarea id="cert-custom-desc-cn" class="input-control" rows="2" style="font-size: 11px; margin-bottom: 6px; resize: vertical;" placeholder="中文表彰评语内容..."></textarea>
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-save-cert-citation" style="flex: 1; font-size: 11.5px;">💾 រក្សាទុកខ្លឹមសារ</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-cert-citation" style="font-size: 11.5px;" title="កំណត់ឡើងវិញ">🔄</button>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn btn-gold btn-lg" id="btn-print-cert">
+                  <span>🖨️</span> <span data-i18n="printCertificate">បោះពុម្ពប័ណ្ណសរសើរ</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-export-pdf-cert">
+                  <span>📥</span> <span>រក្សាទុកជា PDF (Save PDF)</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-batch-print-cert">
+                  <span>🏆</span> <span>បោះពុម្ពប័ណ្ណសិស្សឆ្នើម (Top 3 Batch)</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-batch-print-all-cert">
+                  <span>🖨️</span> <span>បោះពុម្ពប័ណ្ណសិស្សទាំងអស់ (Batch All)</span>
+                </button>
+              </div>
+
+              <div
+                style="font-size: 12px; color: var(--text-muted); line-height: 1.5; background: #FFFBEB; padding: 12px; border-radius: 8px; border: 1px solid #FEF3C7;">
+                ⭐ <strong>ចំណាំ</strong>៖ ប័ណ្ណសរសើរនេះត្រូវបានរចនាឡើងជាទម្រង់ A4 Landscape ពណ៌មាស មានសញ្ញាបត្រ
+                និងត្រាសាលា ស្របតាមរចនាបទសាលាចិន។
+              </div>
+            </div>
+
+            <div class="report-preview-wrapper">
+              <div id="cert-preview-area">
+                <!-- Rendered Certificate -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 6: SETTINGS & BACKUP -->
+        <section id="view-settings" class="view-container">
+          <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+            <!-- School Information Card -->
+            <div class="content-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <span>🏫</span> <span data-i18n="schoolInfo">ព័ត៌មានសាលារៀន</span>
+                </div>
+              </div>
+              <form id="settings-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label data-i18n="schoolNameKm">ឈ្មោះសាលា (ភាសាខ្មែរ)</label>
+                    <input type="text" id="setting-school-km" required>
+                  </div>
+                  <div class="form-group">
+                    <label data-i18n="schoolNameCn">ឈ្មោះសាលា (ភាសាចិន 中文)</label>
+                    <input type="text" id="setting-school-cn" required>
+                  </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 14px;">
+                  <div class="form-group">
+                    <label data-i18n="academicYear">ឆ្នាំសិក្សា</label>
+                    <input type="text" id="setting-academic-year" value="2025 - 2026">
+                  </div>
+                  <div class="form-group">
+                    <label>ពិន្ទុពេញនៃមុខវិជ្ជានីមួយៗ (Full Score Scale)</label>
+                    <select class="select-control" id="setting-score-scale">
+                      <option value="100" selected>១០០ ពិន្ទុ (满分 100 分 - ផ្លូវការ)</option>
+                      <option value="10">១០ ពិន្ទុ (满分 10 分)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>អក្សរលើត្រាក្រហមសាលា (印章文字)</label>
+                    <input type="text" id="setting-seal-text" placeholder="磅湛省公立培华学校">
+                  </div>
+                </div>
+
+                <!-- Logo, Seal & Signature Uploads -->
+                <div class="form-row" style="margin-top: 14px;">
+                  <div class="form-group">
+                    <label>Logo ផ្លូវការរបស់សាលា (Official School Logo)</label>
+                    <input type="file" id="setting-logo-file" accept="image/*" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px; flex-wrap: wrap;">
+                      <div id="setting-logo-preview"
+                        style="width: 50px; height: 50px; border: 1px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; background: #ffffff;">
+                        <img src="assets/images/school-logo.png" style="width: 100%; height: 100%; object-fit: contain;"></div>
+                      <button type="button" class="btn btn-secondary btn-sm" id="btn-upload-logo">ជ្រើសរើស Logo</button>
+                      <button type="button" class="btn btn-danger btn-sm" id="btn-clear-logo"
+                        style="display: none;">លុប</button>
+                      <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-default-logo"
+                        title="កំណត់ Logo សាលាដើមឡើងវិញ (Pei Hua School)">Logo សាលាដើម</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>ត្រាក្រហមផ្លូវការរបស់សាលា (Official School Seal)</label>
+                    <input type="file" id="setting-seal-file" accept="image/*" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px; flex-wrap: wrap;">
+                      <div id="setting-seal-preview"
+                        style="width: 50px; height: 50px; border: 1px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; background: #ffffff;">
+                        <img src="assets/images/school-seal.png" style="width: 100%; height: 100%; object-fit: contain;"></div>
+                      <button type="button" class="btn btn-secondary btn-sm" id="btn-upload-seal">ជ្រើសរើស ត្រា</button>
+                      <button type="button" class="btn btn-danger btn-sm" id="btn-clear-seal"
+                        style="display: none;">លុប</button>
+                      <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-default-seal"
+                        title="កំណត់ ត្រាសាលាដើមឡើងវិញ (Pei Hua School Seal)">ត្រាសាលាដើម</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 14px;">
+                  <div class="form-group">
+                    <label>ហត្ថលេខានាយកសាលា (Principal Signature)</label>
+                    <input type="file" id="setting-sig-principal-file" accept="image/*" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+                      <div id="setting-sig-principal-preview"
+                        style="width: 80px; height: 50px; border: 1px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; overflow: hidden; background: var(--bg-surface); color: var(--text-muted);">
+                        គ្មាន</div>
+                      <button type="button" class="btn btn-secondary btn-sm"
+                        id="btn-upload-sig-principal">Upload</button>
+                      <button type="button" class="btn btn-danger btn-sm" id="btn-clear-sig-principal"
+                        style="display: none;">លុប</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>ហត្ថលេខាគ្រូបន្ទុកថ្នាក់ (Teacher Signature)</label>
+                    <input type="file" id="setting-sig-teacher-file" accept="image/*" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+                      <div id="setting-sig-teacher-preview"
+                        style="width: 80px; height: 50px; border: 1px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; overflow: hidden; background: var(--bg-surface); color: var(--text-muted);">
+                        គ្មាន</div>
+                      <button type="button" class="btn btn-secondary btn-sm" id="btn-upload-sig-teacher">Upload</button>
+                      <button type="button" class="btn btn-danger btn-sm" id="btn-clear-sig-teacher"
+                        style="display: none;">លុប</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 14px;">
+                  <div class="form-group">
+                    <label>ឈ្មោះនាយកសាលា (ខ្មែរ)</label>
+                    <input type="text" id="setting-principal-km">
+                  </div>
+                  <div class="form-group">
+                    <label>ឈ្មោះនាយកសាលា (ចិន 校长)</label>
+                    <input type="text" id="setting-principal-cn">
+                  </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 14px;">
+                  <div class="form-group">
+                    <label>ឈ្មោះគ្រូបន្ទុកថ្នាក់ (ខ្មែរ)</label>
+                    <input type="text" id="setting-teacher-km">
+                  </div>
+                  <div class="form-group">
+                    <label>ឈ្មោះគ្រូបន្ទុកថ្នាក់ (ចិន 班主任)</label>
+                    <input type="text" id="setting-teacher-cn">
+                  </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 14px;">
+                  <div class="form-group">
+                    <label>ពាក្យស្លោកសាលា (ខ្មែរ School Motto)</label>
+                    <input type="text" id="setting-motto-km" value="ឧស្សាហ៍ វិន័យ សាមគ្គី ច្នៃប្រឌិត">
+                  </div>
+                  <div class="form-group">
+                    <label>ពាក្យស្លោកសាលា (ចិន 校训)</label>
+                    <input type="text" id="setting-motto-cn" value="勤奋 · 守纪 · 博爱 · 创新">
+                  </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 14px;">
+                  <div class="form-group">
+                    <label>កម្រិតពិន្ទុ Grade A (优秀 ≥)</label>
+                    <input type="number" id="setting-cutoff-a" value="90">
+                  </div>
+                  <div class="form-group">
+                    <label>កម្រិតពិន្ទុ Grade B (良好 ≥)</label>
+                    <input type="number" id="setting-cutoff-b" value="80">
+                  </div>
+                  <div class="form-group">
+                    <label>កម្រិតពិន្ទុ Grade C (及格 ≥)</label>
+                    <input type="number" id="setting-cutoff-c" value="65">
+                  </div>
+                </div>
+
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                  <button type="submit" class="btn btn-primary">
+                    <span>💾</span> <span data-i18n="save">រក្សាទុកការកំណត់</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Backup and Restore Card -->
+            <div class="content-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <span>🛡️</span> <span data-i18n="settingsTitle">ការបម្រុងទុកទិន្នន័យ (Backup & Restore)</span>
+                </div>
+              </div>
+              <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                រក្សាទុកទិន្នន័យទាំងអស់ជាឯកសារ JSON ដើម្បីការពារការបាត់បង់ទិន្នន័យពេលផ្លាស់ប្តូរកុំព្យូទ័រ ឬ Clear
+                Browser Cache។
+              </p>
+
+              <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 20px;">
+                <button class="btn btn-secondary" id="btn-export-backup">
+                  <span>📤</span> <span data-i18n="exportBackup">ទាញយក Backup JSON</span>
+                </button>
+
+                <button class="btn btn-secondary" id="btn-import-backup">
+                  <span>📥</span> <span data-i18n="importBackup">បញ្ចូលទិន្នន័យពី JSON</span>
+                </button>
+                <input type="file" id="input-import-file" accept=".json" style="display: none;">
+
+                <button class="btn btn-primary" id="btn-create-snapshot">
+                  <span>💾</span> <span>បង្កើតចំណុចបម្រុងទុកឥឡូវនេះ (Create Snapshot)</span>
+                </button>
+
+                <button class="btn btn-danger" id="btn-reset-demo" style="margin-left: auto;">
+                  <span>🔄</span> <span data-i18n="resetData">កំណត់ទិន្នន័យគំរូឡើងវិញ</span>
+                </button>
+              </div>
+
+              <!-- Snapshot History List -->
+              <div style="border-top: 1px solid var(--border-light); padding-top: 16px;">
+                <div style="font-weight: 700; font-size: 14px; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                  <span>📦</span> <span>ប្រវត្តិបម្រុងទុកស្វ័យប្រវត្តិ (Auto-Backup Snapshots History)</span>
+                </div>
+                <div id="settings-snapshots-list">
+                  <!-- Dynamically populated from Storage -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ADD / EDIT STUDENT MODAL -->
+  <div class="modal-backdrop" id="student-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="student-modal-title" data-i18n="addStudent">ចុះឈ្មោះសិស្សថ្មី</h3>
+        <button class="modal-close-btn" onclick="StudentsModule.closeStudentModal()">✕</button>
+      </div>
+
+      <form id="student-form">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="studentId">អត្តលេខ (ID) *</label>
+              <input type="text" id="student-id-input" required>
+            </div>
+            <div class="form-group">
+              <label data-i18n="classGrade">ថ្នាក់រៀន *</label>
+              <select id="student-class-input" required>
+                <option value="K3">មត្តេយ្យកម្រិតខ្ពស់ (幼大班 - K3)</option>
+                <option value="K2">មត្តេយ្យកម្រិតទាប (幼中班 - K2)</option>
+                <option value="K1">ថ្នាក់កុមារដ្ឋាន (幼小班 - K1)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="khmerName">ឈ្មោះខ្មែរ *</label>
+              <input type="text" id="student-kh-input" placeholder="ឧ. លី មួយគា" required>
+            </div>
+            <div class="form-group">
+              <label data-i18n="chineseName">ឈ្មោះចិន (中文姓名) *</label>
+              <input type="text" id="student-cn-input" placeholder="例: 李美华" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="pinyin">ភីនអុីន (Pinyin)</label>
+              <input type="text" id="student-pinyin-input" placeholder="Lǐ Měihuá">
+            </div>
+            <div class="form-group">
+              <label data-i18n="gender">ភេទ *</label>
+              <select id="student-gender-input">
+                <option value="male">ប្រុស (男)</option>
+                <option value="female">ស្រី (女)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="dob">ថ្ងៃខែឆ្នាំកំណើត</label>
+              <input type="date" id="student-dob-input">
+            </div>
+            <div class="form-group">
+              <label>រូបថតសិស្សពិត (Upload Real Photo)</label>
+              <input type="hidden" id="student-photo-input" value="">
+              <input type="file" id="student-photo-file" accept="image/*" style="display: none;">
+              <div class="photo-upload-container">
+                <div class="photo-preview-circle" id="student-photo-preview">👦</div>
+                <div class="photo-upload-actions">
+                  <button type="button" class="btn btn-secondary btn-sm photo-upload-btn" id="btn-browse-photo">📷
+                    ជ្រើសរើសរូបថត</button>
+                  <button type="button" class="btn btn-danger btn-sm photo-upload-btn" id="btn-clear-photo"
+                    style="display: none;">🗑️ លុបរូប</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label data-i18n="photo">ឬជ្រើសរើសរូបតំណាង Emoji (Avatar)</label>
+              <input type="hidden" id="student-avatar-input" value="boy1">
+              <div class="avatar-selection-grid" id="avatar-selector-grid">
+                <div class="avatar-choice selected" data-avatar="boy1" style="font-size: 26px;">👦</div>
+                <div class="avatar-choice" data-avatar="boy2" style="font-size: 26px;">🧒</div>
+                <div class="avatar-choice" data-avatar="boy3" style="font-size: 26px;">👶</div>
+                <div class="avatar-choice" data-avatar="girl1" style="font-size: 26px;">👧</div>
+                <div class="avatar-choice" data-avatar="girl2" style="font-size: 26px;">👧🏻</div>
+                <div class="avatar-choice" data-avatar="girl3" style="font-size: 26px;">🧒🏻</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="guardianName">ឈ្មោះអាណាព្យាបាល</label>
+              <input type="text" id="student-guard-name-input" placeholder="ឈ្មោះឪពុក ឬម្តាយ">
+            </div>
+            <div class="form-group">
+              <label data-i18n="guardianPhone">លេខទូរស័ព្ទ</label>
+              <input type="text" id="student-guard-phone-input" placeholder="012 345 678">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="StudentsModule.closeStudentModal()"
+            data-i18n="cancel">បោះបង់</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">រក្សាទុក</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Teacher Comments Bank (ឃ្លាំងមតិយោបល់គ្រូ) -->
+  <div id="modal-comments-bank" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>💡</span> <span>ឃ្លាំងមតិយោបល់គ្រូស្វ័យប្រវត្តិ (教师评语库)</span>
+        </div>
+        <button type="button" class="modal-close-btn"
+          onclick="document.getElementById('modal-comments-bank').classList.remove('open')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="comment-bank-categories" id="comment-cat-tabs">
+          <button class="comment-cat-btn active" data-category="excellent">🌟 និទ្ទេស A (优秀)</button>
+          <button class="comment-cat-btn" data-category="good">👍 និទ្ទេស B (良好)</button>
+          <button class="comment-cat-btn" data-category="fair">👌 និទ្ទេស C (及格)</button>
+          <button class="comment-cat-btn" data-category="needsImprovement">💪 និទ្ទេស D (需努力)</button>
+        </div>
+        <div class="comment-presets-list" id="comment-presets-list">
+          <!-- Populated dynamically from CommentsBank -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Bulk CSV Import -->
+  <div id="modal-csv-import" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 720px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>📥</span> <span>នាំចូលសិស្សពី Excel / CSV (Bulk Student Import)</span>
+        </div>
+        <button type="button" class="modal-close-btn"
+          onclick="document.getElementById('modal-csv-import').classList.remove('open')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="csv-dropzone" id="csv-dropzone-box" onclick="document.getElementById('csv-file-input').click()">
+          <span style="font-size: 36px; display: block; margin-bottom: 8px;">📂</span>
+          <strong>ចុចទីនេះដើម្បីជ្រើសរើសឯកសារ CSV ឬទម្លាក់ឯកសារចូល</strong>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">គាំទ្រឯកសារ .csv (UTF-8)
+            ដែលមានឈ្មោះខ្មែរ ចិន ភេទ ថ្នាក់ ...</div>
+          <input type="file" id="csv-file-input" accept=".csv" style="display: none;">
+        </div>
+
+        <div id="csv-preview-container" style="display: none; margin-top: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 13px;">មើលទិន្នន័យជាមុន (Preview)៖ <span id="csv-preview-count"
+                class="badge badge-k2">0 នាក់</span></strong>
+          </div>
+          <div class="csv-preview-table-wrapper">
+            <table class="data-table" style="font-size: 12px;">
+              <thead>
+                <tr>
+                  <th>ឈ្មោះខ្មែរ</th>
+                  <th>ឈ្មោះចិន</th>
+                  <th>ភេទ</th>
+                  <th>ថ្នាក់</th>
+                  <th>ថ្ងៃកំណើត</th>
+                  <th>ទូរស័ព្ទ</th>
+                </tr>
+              </thead>
+              <tbody id="csv-preview-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+          onclick="document.getElementById('modal-csv-import').classList.remove('open')">បោះបង់</button>
+        <button type="button" class="btn btn-primary" id="btn-confirm-csv-import" disabled>នាំចូលទិន្នន័យ (Import
+          Now)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Trash Bin (ធុងសំរាម) -->
+  <div id="modal-trash-bin" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🗑️</span> <span>ធុងសំរាមសិស្សដែលបានលុប (Trash Bin)</span>
+        </div>
+        <button type="button" class="modal-close-btn"
+          onclick="document.getElementById('modal-trash-bin').classList.remove('open')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          សិស្សក្នុងធុងសំរាមអាចធ្វើការស្តារឡើងវិញ (Restore) បានគ្រប់ពេលវេលា ដោយមិនបាត់បង់ព័ត៌មានឡើយ។
+        </p>
+        <div class="trash-list-container" id="trash-students-list">
+          <!-- Populated from Storage.getTrashStudents() -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" id="btn-empty-trash"
+          style="margin-right: auto;">សម្អាតធុងសំរាមទាំងអស់ (Empty Trash)</button>
+        <button type="button" class="btn btn-secondary"
+          onclick="document.getElementById('modal-trash-bin').classList.remove('open')">បិទ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Subject Manager (គ្រប់គ្រងមុខវិជ្ជា) -->
+  <div id="modal-subjects-manager" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>⚙️</span> <span>គ្រប់គ្រងមុខវិជ្ជា និងកម្មវិធីសិក្សា (科目体系管理)</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-subjects-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+          <span style="font-size: 13px; color: var(--text-muted);">
+            លោកគ្រូអាចបន្ថែមមុខវិជ្ជាថ្មី កែសម្រួល ឬលុបមុខវិជ្ជាបានដោយសេរី។
+          </span>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-add-subject-row">
+            <span>➕</span> <span>បន្ថែមមុខវិជ្ជាថ្មី (Add Subject)</span>
+          </button>
+        </div>
+
+        <div id="subjects-manager-list" class="subjects-list-container" style="display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto;">
+          <!-- Dynamically populated from Storage.getSubjects() -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-reset-subjects" style="margin-right: auto; color: var(--danger);">
+          <span>🔄</span> <span>កំណត់ឡើងវិញ ៦ មុខវិជ្ជាដើម (Default)</span>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-subjects-manager').classList.remove('open')">
+          រួចរាល់ (Done)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: STUDENT DETAIL QUICK VIEW (មើលព័ត៌មានលម្អិតសិស្ស) -->
+  <div id="modal-student-detail" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🧒</span> <span>ព័ត៌មានលម្អិតសិស្ស (学生详细档案)</span>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('modal-student-detail').classList.remove('open')">&times;</button>
+      </div>
+      <div class="modal-body" id="student-detail-content" style="padding: 20px;">
+        <!-- Dynamically rendered -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-student-detail').classList.remove('open')">
+          បិទ (Close)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ID CARDS PRINT OPTIONS (ជម្រើសបោះពុម្ពកាតសិស្ស) -->
+  <div id="modal-id-card-options" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 500px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🪪</span> <span>ជម្រើសបោះពុម្ពកាតសិស្ស A4 (学生证打印选项)</span>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('modal-id-card-options').classList.remove('open')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <div class="form-group">
+          <label>ជ្រើសរើសថ្នាក់ (选择班级):</label>
+          <select class="select-control" id="id-card-class-select">
+            <option value="all">គ្រប់ថ្នាក់ទាំងអស់ (全部班级)</option>
+            <option value="K1">ថ្នាក់កុមារដ្ឋាន (幼小班 - K1)</option>
+            <option value="K2">មត្តេយ្យកម្រិតទាប (幼中班 - K2)</option>
+            <option value="K3">មត្តេយ្យកម្រិតខ្ពស់ (幼大班 - K3)</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-top: 14px;">
+          <label>ទម្រង់ប្លង់កាតលើក្រដាស A4 (排版规格):</label>
+          <select class="select-control" id="id-card-layout-select">
+            <option value="2x4" selected>ស្តង់ដារ 2×4 (៨ កាតក្នុង ១ សន្លឹក A4 - ទំហំធំល្មម)</option>
+            <option value="3x3">តូចល្មម 3×3 (៩ កាតក្នុង ១ សន្លឹក A4 - សន្សំសំចៃក្រដាស)</option>
+          </select>
+        </div>
+        <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px; padding: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-light); border-radius: 8px;">
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px;">
+            <input type="checkbox" id="id-card-opt-qr" checked style="width: 16px; height: 16px;">
+            <span><strong>បំពាក់ QR Code ស្កេនព័ត៌មានសិស្ស (附带二维码)</strong></span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px;">
+            <input type="checkbox" id="id-card-opt-seal" checked style="width: 16px; height: 16px;">
+            <span><strong>បោះត្រាក្រហមឌីជីថលផ្លូវការរបស់សាលា (加盖学校印章)</strong></span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-id-card-options').classList.remove('open')">
+          បោះបង់
+        </button>
+        <button type="button" class="btn btn-primary" id="btn-confirm-print-id-cards">
+          <span>🖨️</span> <span>បោះពុម្ពឥឡូវនេះ (Print Now)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SCORE CSV IMPORT (នាំចូលពិន្ទុពី CSV) -->
+  <div id="modal-scores-csv-import" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 600px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>📥</span> <span>នាំចូលពិន្ទុសិស្សពី Excel / CSV (导入成绩)</span>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('modal-scores-csv-import').classList.remove('open')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+          សូមជ្រើសរើសឯកសារ CSV ដែលបានបំពេញតាមទម្រង់គំរូ។ ប្រព័ន្ធនឹងធ្វើការគណនាសរុប មធ្យមភាគ និងចំណាត់ថ្នាក់ដោយស្វ័យប្រវត្តិ។
+        </p>
+        <div class="form-group">
+          <input type="file" id="scores-csv-file-input" accept=".csv" class="input-control">
+        </div>
+        <div id="scores-csv-preview-container" style="display: none; margin-top: 14px; padding: 12px; background: var(--bg-surface-elevated); border: 1px solid var(--border-light); border-radius: 8px;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-main);">
+            រកឃើញទិន្នន័យ៖ <span class="badge badge-k2" id="scores-csv-preview-count">0</span>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+            ត្រៀមបញ្ចូលចូលទៅក្នុងឆមាសបច្ចុប្បន្ន...
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-scores-csv-import').classList.remove('open')">
+          បោះបង់ (Cancel)
+        </button>
+        <button type="button" class="btn btn-primary" id="btn-confirm-scores-csv-import" disabled>
+          <span>📥</span> <span>បញ្ចូលពិន្ទុ (Import Now)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BATCH FILL SCORES (បំពេញពិន្ទុស្មើគ្នាទាំងអស់) -->
+  <div id="modal-batch-fill-scores" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 480px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>⚡</span> <span>កំណត់ពិន្ទុស្មើគ្នារហ័ស (批量填充)</span>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('modal-batch-fill-scores').classList.remove('open')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <div class="form-group">
+          <label>ជ្រើសរើសមុខវិជ្ជា (选择科目)</label>
+          <select id="batch-fill-subject-select" class="select-control"></select>
+        </div>
+        <div class="form-group" style="margin-top: 12px;">
+          <label>ពិន្ទុដែលត្រូវកំណត់ (输入成绩)</label>
+          <input type="number" id="batch-fill-value-input" class="input-control" value="85" min="0" max="100">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-batch-fill-scores').classList.remove('open')">
+          បោះបង់
+        </button>
+        <button type="button" class="btn btn-primary" id="btn-confirm-batch-fill">
+          អនុវត្ត (Apply to All)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="app-toast-container" class="toast-container"></div>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/school-logo.js"></script>
+  <script src="js/translations.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/electron-bridge.js"></script>
+  <script src="js/comments-bank.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/qrcode.js"></script>
+  <script src="js/students.js"></script>
+  <script src="js/scores.js"></script>
+  <script src="js/attendance.js"></script>
+  <script src="js/honor-roll.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
